@@ -26,13 +26,13 @@ export function ContactPage() {
           ) : (
             <form className="grid gap-4" onSubmit={onSubmit}>
               <Field label={t('contact.name')}>
-                <input required name="name" className={inputClass} />
+                <input required name="name" autoComplete="name" className={inputClass} />
               </Field>
               <Field label={t('contact.phone')}>
-                <input required name="phone" className={inputClass} />
+                <input required name="phone" autoComplete="tel" className={inputClass} />
               </Field>
               <Field label={t('contact.email')}>
-                <input required type="email" name="email" className={inputClass} />
+                <input required type="email" name="email" autoComplete="email" className={inputClass} />
               </Field>
               <Field label={t('contact.message')}>
                 <textarea required name="message" rows={4} className={inputClass} />
@@ -43,9 +43,18 @@ export function ContactPage() {
         </Card>
         <Card className="bg-navy text-cream">
           <p>{t('footer.address')}</p>
-          <p className="mt-2">{t('contact.phoneValue')}</p>
-          <p className="mt-2">{t('contact.emailValue')}</p>
           <p className="mt-6 text-cream/70">{t('footer.hours')}</p>
+          <p className="mt-2 text-sm text-cream/60">{t('footer.shabbat')}</p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Button href="tel:+97225550148" variant="gold">
+              {t('contact.call')}
+            </Button>
+            <Button href="mailto:office@chabad-kinder.demo" variant="ghost" className="text-cream">
+              {t('contact.mail')}
+            </Button>
+          </div>
+          <p className="mt-6 text-sm text-gold">{t('contact.phoneValue')}</p>
+          <p className="text-sm text-gold">{t('contact.emailValue')}</p>
         </Card>
       </div>
     </Section>

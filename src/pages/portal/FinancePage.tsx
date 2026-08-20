@@ -1,16 +1,19 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ChildSwitcher } from '../../components/ChildSwitcher'
+import { Button, Card } from '../../components/ui'
+import { useFamily } from '../../context/FamilyContext'
 import { children, invoices, paymentsSeed, tariffs } from '../../data/mock'
+import { formatDate, formatMoney } from '../../lib/format'
 import { useLang } from '../../lib/hooks'
 import { loadJson, saveJson } from '../../lib/storage'
-import { Button, Card } from '../../components/ui'
 
 type ExtraPayment = { id: string; date: string; amount: number; note: string; receipt: boolean }
 
 export function FinancePage() {
   const { t } = useTranslation()
   const lang = useLang()
-  const [childId, setChildId] = useState(children[0].id)
+  const { childId } = useFamily()
   const extras = loadJson<ExtraPayment[]>('payments', [])
   const [receiptId, setReceiptId] = useState<string | null>(null)
   const child = children.find((item) => item.id === childId) ?? children[0]
@@ -51,20 +54,7 @@ export function FinancePage() {
 
   return (
     <div className="grid gap-5">
-      <div className="flex flex-wrap gap-2">
-        {children.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            onClick={() => setChildId(item.id)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold ${
-              childId === item.id ? 'bg-navy text-cream' : 'bg-white text-navy'
-            }`}
-          >
-            {item.name[lang]}
-          </button>
-        ))}
-      </div>
+      <ChildSwitcher />
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <p className="text-sm text-muted">{t('portal.tariff')}</p>
@@ -72,19 +62,19 @@ export function FinancePage() {
             {child.track === 'gan' ? t('gan.full') : t('wizard.school')}
           </p>
           <p className="text-gold">
-            {tariffs[child.tariffId as keyof typeof tariffs].amount} ₪
+            {formatMoney(tariffs[child.tariffId as keyof typeof tariffs].amount, lang)}
           </p>
         </Card>
         <Card>
           <p className="text-sm text-muted">{t('portal.invoice')}</p>
-          <p className="mt-1 font-display text-2xl text-navy">{billed} ₪</p>
+          <p className="mt-1 font-display text-2xl text-navy">{formatMoney(billed, lang)}</p>
           <p className="text-sm text-muted">
-            {t('portal.visits')} {invoice.tariff} · {t('portal.extras')} {invoice.extras}
+            {t('portal.visits')} {formatMoney(invoice.tariff, lang)} · {t('portal.extras')} {formatMoney(invoice.extras, lang)}
           </p>
         </Card>
         <Card className={delta > 0 ? 'bg-terracotta text-cream' : 'bg-navy text-cream'}>
           <p className="text-sm opacity-80">{delta > 0 ? t('portal.debt') : t('portal.overpay')}</p>
-          <p className="mt-1 font-display text-3xl">{Math.abs(delta)} ₪</p>
+          <p className="mt-1 font-display text-3xl">{formatMoney(Math.abs(delta), lang)}</p>
         </Card>
       </div>
       <Card>
@@ -96,9 +86,9 @@ export function FinancePage() {
           {history.map((row) => (
             <li key={row.id} className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-cream px-4 py-3">
               <span>
-                {row.date} · {row.note[lang]}
+                {formatDate(row.date, lang)} · {row.note[lang]}
               </span>
-              <span className="font-semibold text-navy">{row.amount} ₪</span>
+              <span className="font-semibold text-navy">{formatMoney(row.amount, lang)}</span>
             </li>
           ))}
         </ul>

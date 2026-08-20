@@ -1,15 +1,15 @@
 import { useTranslation } from 'react-i18next'
-import { staff } from '../data/mock'
+import { staff, tariffs, weekMenu } from '../data/mock'
+import { formatMoney } from '../lib/format'
 import { useLang, useLoc } from '../lib/hooks'
-import { asset } from '../lib/paths'
-import { Button, Card, Section } from '../components/ui'
+import { Button, Card, CtaBand, PageHero, Section } from '../components/ui'
 
 const tracks = [
-  { key: 'full', price: '2,800 ₪' },
-  { key: 'half', price: '1,900 ₪' },
-  { key: 'hourly', price: '80 ₪' },
-  { key: 'emergency', price: '150 ₪' },
-] as const
+  { key: 'full' as const, unit: 'perMonth' },
+  { key: 'half' as const, unit: 'perMonth' },
+  { key: 'hourly' as const, unit: 'perHour' },
+  { key: 'emergency' as const, unit: 'perDay' },
+]
 
 const day = ['d1', 'd2', 'd3', 'd4', 'd5'] as const
 
@@ -20,23 +20,18 @@ export function GanPage() {
 
   return (
     <>
-      <section className="relative h-[42vh] min-h-72 overflow-hidden">
-        <img src={asset('images/gan-classroom.png')} alt="" className="h-full w-full object-cover" />
-        <div className="hero-scrim absolute inset-0" />
-        <div className="relative mx-auto flex h-full max-w-6xl items-end px-5 pb-10 text-cream">
-          <div>
-            <p className="text-xs tracking-[0.2em] text-gold-soft uppercase">{t('gan.kicker')}</p>
-            <h1 className="mt-2 max-w-3xl font-display text-4xl md:text-5xl">{t('gan.title')}</h1>
-          </div>
-        </div>
-      </section>
+      <PageHero image="images/gan-classroom.png" kicker={t('gan.kicker')} title={t('gan.title')} lead={t('gan.ageRange')} />
       <Section lead={t('gan.lead')}>
         <div className="grid gap-4 md:grid-cols-2">
           {tracks.map((track) => (
-            <Card key={track.key}>
-              <p className="font-display text-2xl text-navy">{t(`gan.${track.key}`)}</p>
-              <p className="mt-2 text-muted">{t(`gan.${track.key}D`)}</p>
-              <p className="mt-4 text-sm font-semibold text-gold">{track.price}</p>
+            <Card key={track.key} className="flex flex-col justify-between">
+              <div>
+                <p className="font-display text-2xl text-navy">{t(`gan.${track.key}`)}</p>
+                <p className="mt-2 text-muted">{t(`gan.${track.key}D`)}</p>
+              </div>
+              <p className="mt-4 text-sm font-semibold text-gold">
+                {formatMoney(tariffs[track.key].amount, lang)} {t(`common.${track.unit}`)}
+              </p>
             </Card>
           ))}
         </div>
@@ -48,11 +43,21 @@ export function GanPage() {
         <ol className="grid gap-3">
           {day.map((id) => (
             <li key={id} className="flex gap-4 rounded-2xl bg-white px-5 py-4">
-              <span className="w-16 font-semibold text-gold">{t(`gan.${id}t`)}</span>
+              <span className="w-16 shrink-0 font-semibold text-gold">{t(`gan.${id}t`)}</span>
               <span className="text-navy">{t(`gan.${id}d`)}</span>
             </li>
           ))}
         </ol>
+      </Section>
+      <Section kicker={t('gan.menuTitle')} title={t('gan.menuTitle')} lead={t('gan.kitchenLead')}>
+        <div className="overflow-hidden rounded-3xl bg-white">
+          {weekMenu.map((row) => (
+            <div key={row.day.en} className="flex items-center justify-between gap-4 border-b border-navy/5 px-5 py-4 last:border-0">
+              <span className="font-semibold text-navy">{row.day[lang]}</span>
+              <span className="text-muted">{row.dish[lang]}</span>
+            </div>
+          ))}
+        </div>
       </Section>
       <Section kicker={t('gan.staffTitle')} title={t('gan.staffTitle')}>
         <div className="grid gap-4 md:grid-cols-3">
@@ -60,10 +65,12 @@ export function GanPage() {
             <Card key={person.id}>
               <p className="text-sm text-gold">{person.role[lang]}</p>
               <p className="mt-1 font-display text-2xl text-navy">{person.name[lang]}</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{person.bio[lang]}</p>
             </Card>
           ))}
         </div>
       </Section>
+      <CtaBand />
     </>
   )
 }

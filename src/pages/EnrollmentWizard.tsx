@@ -2,6 +2,7 @@ import { useMemo, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { tariffs } from '../data/mock'
+import { formatMoney } from '../lib/format'
 import { useLang, useLoc } from '../lib/hooks'
 import { loadJson, saveJson } from '../lib/storage'
 import { Button, Card, Field, Section, inputClass } from '../components/ui'
@@ -105,11 +106,28 @@ export function EnrollmentWizard() {
     { id: 'parsha', label: { he: 'פרשה', en: 'Parsha', ru: 'Глава недели' } },
   ]
 
+  const stepIndex =
+    step === 'age' ? 1
+    : step === 'gender' ? 2
+    : step === 'track' ? 3
+    : step === 'stay' ? 4
+    : step === 'interest' ? 5
+    : step === 'recommend' ? 6
+    : 7
+  const totalSteps = 7
+
   return (
     <Section kicker={t('wizard.kicker')} title={t('wizard.title')}>
       <div className="mx-auto max-w-xl">
         <Card className="bg-cream/40">
-          <p className="mb-4 text-xs font-semibold tracking-wide text-gold">{t('wizard.botName')}</p>
+          <div className="mb-5">
+            <p className="text-xs font-semibold tracking-wide text-gold">
+              {t('wizard.botName')} · {t('wizard.stepOf', { current: Math.min(stepIndex, totalSteps), total: totalSteps })}
+            </p>
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-navy/10">
+              <div className="h-full rounded-full bg-gold transition-all" style={{ width: `${(stepIndex / totalSteps) * 100}%` }} />
+            </div>
+          </div>
           <div className="grid gap-3">
             <Bubble from="bot">{t('wizard.start')}</Bubble>
             <Bubble from="bot">{t('wizard.askAge')}</Bubble>
@@ -227,7 +245,7 @@ export function EnrollmentWizard() {
                     }
                   />
                 ))}
-                <Chip label={t('wizard.recommend')} onClick={() => setStep('recommend')} />
+                <Chip label={t('wizard.continue')} onClick={() => setStep('recommend')} />
               </div>
             )}
 
@@ -239,7 +257,7 @@ export function EnrollmentWizard() {
                 </p>
                 <p className="mt-2 text-gold">
                   {t('wizard.priceFrom')}
-                  {recommendation.tariff.amount} ₪ {unitLabel()}
+                  {formatMoney(recommendation.tariff.amount, lang)} {unitLabel()}
                 </p>
                 <p className="mt-3 text-sm text-cream/80">{t('wizard.aboutShort')}</p>
               </div>

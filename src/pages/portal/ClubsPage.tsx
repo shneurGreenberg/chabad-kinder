@@ -1,14 +1,17 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { children, clubs, defaultClubState, type EnrollmentStatus } from '../../data/mock'
+import { ChildSwitcher } from '../../components/ChildSwitcher'
+import { Button, Card } from '../../components/ui'
+import { useFamily } from '../../context/FamilyContext'
+import { clubs, defaultClubState, type EnrollmentStatus } from '../../data/mock'
+import { formatMoney } from '../../lib/format'
 import { useLang } from '../../lib/hooks'
 import { loadJson, saveJson } from '../../lib/storage'
-import { Button, Card } from '../../components/ui'
 
 export function ClubsPage() {
   const { t } = useTranslation()
   const lang = useLang()
-  const [childId, setChildId] = useState(children[0].id)
+  const { childId } = useFamily()
   const [state, setState] = useState<Record<string, EnrollmentStatus>>(
     () => loadJson('clubs', defaultClubState),
   )
@@ -21,20 +24,7 @@ export function ClubsPage() {
 
   return (
     <div className="grid gap-5">
-      <div className="flex flex-wrap gap-2">
-        {children.map((child) => (
-          <button
-            key={child.id}
-            type="button"
-            onClick={() => setChildId(child.id)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold ${
-              childId === child.id ? 'bg-navy text-cream' : 'bg-white text-navy'
-            }`}
-          >
-            {child.name[lang]}
-          </button>
-        ))}
-      </div>
+      <ChildSwitcher />
       <div className="grid gap-4 md:grid-cols-2">
         {clubs
           .filter((club) => club.childIds.includes(childId))
@@ -46,7 +36,7 @@ export function ClubsPage() {
                 <p className="font-display text-2xl text-navy">{club.title[lang]}</p>
                 <p className="mt-1 text-sm text-muted">{club.when[lang]}</p>
                 <p className="mt-2 text-gold">
-                  {club.price} ₪ · {t('portal.spots')}: {free}
+                  {formatMoney(club.price, lang)} · {t('portal.spots')}: {free}
                 </p>
                 <p className="mt-2 text-sm">
                   {status === 'enrolled' && t('portal.enrolled')}

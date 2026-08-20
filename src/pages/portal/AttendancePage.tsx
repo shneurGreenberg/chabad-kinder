@@ -1,9 +1,11 @@
 import { useMemo, useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
-import { attendanceSeed, children, type AttendanceStatus } from '../../data/mock'
+import { ChildSwitcher } from '../../components/ChildSwitcher'
+import { Button, Card, Field, inputClass } from '../../components/ui'
+import { useFamily } from '../../context/FamilyContext'
+import { attendanceSeed, type AttendanceStatus } from '../../data/mock'
 import { useLang } from '../../lib/hooks'
 import { loadJson, saveJson } from '../../lib/storage'
-import { Button, Card, Field, inputClass } from '../../components/ui'
 
 type Report = { childId: string; date: string; reason: AttendanceStatus; file?: string }
 
@@ -16,9 +18,10 @@ const weekdayLabels: Record<string, string[]> = {
 export function AttendancePage() {
   const { t } = useTranslation()
   const lang = useLang()
-  const [childId, setChildId] = useState(children[0].id)
+  const { childId } = useFamily()
   const [saved, setSaved] = useState(false)
   const [fileName, setFileName] = useState('')
+  const [picked, setPicked] = useState('2026-08-20')
   const reports = loadJson<Report[]>('absence-reports', [])
 
   const days = useMemo(() => {
@@ -28,6 +31,8 @@ export function AttendancePage() {
     )
     return seed.map((row) => ({ ...row, status: overlay[row.date] ?? row.status }))
   }, [childId, reports])
+
+  const pad = new Date(`${days[0]?.date ?? '2026-08-01'}T12:00:00`).getDay()
 
   function statusClass(status: AttendanceStatus) {
     if (status === 'present') return 'bg-navy text-cream'
@@ -52,41 +57,35 @@ export function AttendancePage() {
 
   return (
     <div className="grid gap-5">
-      <div className="flex flex-wrap gap-2">
-        {children.map((child) => (
-          <button
-            key={child.id}
-            type="button"
-            onClick={() => setChildId(child.id)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold ${
-              childId === child.id ? 'bg-navy text-cream' : 'bg-white text-navy'
-            }`}
-          >
-            {child.name[lang]}
-          </button>
-        ))}
-      </div>
+      <ChildSwitcher />
       <Card>
         <h1 className="font-display text-2xl text-navy">{t('portal.attendance')}</h1>
+        <p className="mt-1 text-sm text-muted">{t('portal.monthLabel')}</p>
         <div className="mt-4 grid grid-cols-7 gap-2 text-center text-xs font-semibold text-muted">
           {weekdayLabels[lang].map((label) => (
             <span key={label}>{label}</span>
           ))}
         </div>
         <div className="mt-2 grid grid-cols-7 gap-2">
-          {days.map((day) => {
-            const date = new Date(`${day.date}T12:00:00`)
-            const offset = date.getDay()
-            return (
-              <div
-                key={day.date}
-                className={`rounded-2xl px-1 py-3 text-center text-xs ${statusClass(day.status)}`}
-                style={day.date.endsWith('-01') ? { gridColumnStart: offset + 1 } : undefined}
-              >
-                <div>{Number(day.date.slice(-2))}</div>
-              </div>
-            )
-          })}
+          {Array.from({ length: pad }).map((_, index) => (
+            <div key={`pad-${index}`} />
+          ))}
+          {days.map((day) => (
+            <button
+              key={day.date}
+              type="button"
+              title={t(`portal.${day.status}`)}
+              onClick={() => {
+                setPicked(day.date)
+                setSaved(false)
+              }}
+              className={`rounded-2xl px-1 py-3 text-center text-xs ${statusClass(day.status)} ${
+                picked === day.date ? 'ring-2 ring-gold ring-offset-2' : ''
+              }`}
+            >
+              {Number(day.date.slice(-2))}
+            </button>
+          ))}
         </div>
         <div className="mt-4 flex flex-wrap gap-3 text-xs">
           {(['present', 'absent', 'sick', 'vacation', 'off'] as const).map((status) => (
@@ -99,11 +98,23 @@ export function AttendancePage() {
       <Card>
         <h2 className="font-display text-xl text-navy">{t('portal.reportAbsence')}</h2>
         {saved ? (
-          <p className="mt-3 text-muted">{t('portal.reportSaved')}</p>
+          <div className="mt-3">
+            <p className="text-muted">{t('portal.reportSaved')}</p>
+            <Button className="mt-3" variant="navy" onClick={() => setSaved(false)}>
+              {t('portal.anotherReport')}
+            </Button>
+          </div>
         ) : (
           <form className="mt-4 grid gap-3 md:grid-cols-2" onSubmit={onSubmit}>
             <Field label={t('common.today')}>
-              <input name="date" type="date" required defaultValue="2026-08-20" className={inputClass} />
+              <input
+                name="date"
+                type="date"
+                required
+                value={picked}
+                onChange={(event) => setPicked(event.target.value)}
+                className={inputClass}
+              />
             </Field>
             <Field label={t('portal.reason')}>
               <select name="reason" className={inputClass}>
@@ -118,7 +129,11 @@ export function AttendancePage() {
                 className={inputClass}
                 onChange={(event) => setFileName(event.target.files?.[0]?.name || '')}
               />
-              {fileName && <p className="mt-1 text-sm text-gold">{t('portal.fileAttached')}: {fileName}</p>}
+              {fileName && (
+                <p className="mt-1 text-sm text-gold">
+                  {t('portal.fileAttached')}: {fileName}
+                </p>
+              )}
             </Field>
             <div className="self-end">
               <Button type="submit">{t('portal.saveReport')}</Button>

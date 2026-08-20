@@ -1,38 +1,36 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import {
-  children,
-  news,
-  reminders,
-  upcoming,
-  weekMenu,
-} from '../../data/mock'
-import { useLang, useLoc } from '../../lib/hooks'
+import { ChildSwitcher } from '../../components/ChildSwitcher'
 import { Card } from '../../components/ui'
+import { useFamily } from '../../context/FamilyContext'
+import { children, news, reminders, upcoming, weekMenu } from '../../data/mock'
+import { formatDate } from '../../lib/format'
+import { useLang, useLoc } from '../../lib/hooks'
 
 export function DashboardPage() {
   const { t } = useTranslation()
   const lang = useLang()
   const loc = useLoc()
-  const today = weekMenu[new Date().getDay() === 6 ? 0 : Math.min(new Date().getDay(), 5)]
-  const [childId, setChildId] = useState(children[0].id)
+  const { childId } = useFamily()
+  const weekday = new Date().getDay()
+  const menuIndex = weekday === 6 ? 5 : Math.min(Math.max(weekday, 0), 5)
+  const today = weekMenu[menuIndex]
+  const child = children.find((item) => item.id === childId) ?? children[0]
+  const childUpcoming = upcoming.filter((item) => item.childId === childId)
 
   return (
     <div className="grid gap-5">
-      <div className="flex flex-wrap gap-2">
-        {children.map((child) => (
-          <button
-            key={child.id}
-            type="button"
-            onClick={() => setChildId(child.id)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold ${
-              childId === child.id ? 'bg-navy text-cream' : 'bg-white text-navy'
-            }`}
-          >
-            {child.name[lang]}
-          </button>
-        ))}
+      <ChildSwitcher />
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Link to={loc('/portal/attendance')} className="rounded-2xl bg-white px-4 py-4 text-sm font-semibold text-navy no-underline shadow-sm">
+          {t('portal.reportAbsence')}
+        </Link>
+        <Link to={loc('/portal/finance')} className="rounded-2xl bg-white px-4 py-4 text-sm font-semibold text-navy no-underline shadow-sm">
+          {t('portal.finance')}
+        </Link>
+        <Link to={loc('/portal/photos')} className="rounded-2xl bg-white px-4 py-4 text-sm font-semibold text-navy no-underline shadow-sm">
+          {t('portal.photos')}
+        </Link>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
@@ -40,7 +38,7 @@ export function DashboardPage() {
           <ul className="mt-3 grid gap-3">
             {news.map((item) => (
               <li key={item.id}>
-                <p className="text-xs text-gold">{item.date}</p>
+                <p className="text-xs text-gold">{formatDate(item.date, lang)}</p>
                 <p className="font-medium text-navy">{item.title[lang]}</p>
               </li>
             ))}
@@ -60,9 +58,7 @@ export function DashboardPage() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <h2 className="font-display text-xl text-navy">{t('portal.fromTeachers')}</h2>
-          <p className="mt-2 text-muted">
-            {children.find((c) => c.id === childId)?.teacher[lang]}
-          </p>
+          <p className="mt-2 text-muted">{child.teacher[lang]}</p>
           <Link to={loc('/portal/messages')} className="mt-3 inline-block text-sm font-semibold text-gold">
             {t('portal.messages')}
           </Link>
@@ -70,7 +66,7 @@ export function DashboardPage() {
         <Card>
           <h2 className="font-display text-xl text-navy">{t('portal.upcoming')}</h2>
           <ul className="mt-2 grid gap-2 text-sm">
-            {upcoming.map((item) => (
+            {childUpcoming.map((item) => (
               <li key={item.id} className="flex justify-between gap-3">
                 <span>{item.title[lang]}</span>
                 <span className="text-gold">{item.when}</span>

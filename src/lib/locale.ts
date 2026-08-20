@@ -14,3 +14,9 @@ export function languageLabel(lang: Lang): string {
   if (lang === 'ru') return 'Русский'
   return 'English'
 }
+
+export function languageCode(lang: Lang): string {
+  if (lang === 'he') return 'HE'
+  if (lang === 'ru') return 'RU'
+  return 'EN'
+}

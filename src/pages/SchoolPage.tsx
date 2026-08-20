@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
+import { Button, Card, CtaBand, PageHero, Section } from '../components/ui'
 import { useLoc } from '../lib/hooks'
-import { asset } from '../lib/paths'
-import { Button, Card, Section } from '../components/ui'
 
 export function SchoolPage() {
   const { t } = useTranslation()
@@ -9,16 +8,7 @@ export function SchoolPage() {
 
   return (
     <>
-      <section className="relative h-[42vh] min-h-72 overflow-hidden">
-        <img src={asset('images/school-classroom.png')} alt="" className="h-full w-full object-cover" />
-        <div className="hero-scrim absolute inset-0" />
-        <div className="relative mx-auto flex h-full max-w-6xl items-end px-5 pb-10 text-cream">
-          <div>
-            <p className="text-xs tracking-[0.2em] text-gold-soft uppercase">{t('school.kicker')}</p>
-            <h1 className="mt-2 max-w-3xl font-display text-4xl md:text-5xl">{t('school.title')}</h1>
-          </div>
-        </div>
-      </section>
+      <PageHero image="images/school-classroom.png" kicker={t('school.kicker')} title={t('school.title')} lead={t('school.priceNote')} />
       <Section lead={t('school.lead')}>
         <div className="grid gap-4 md:grid-cols-3">
           {['g1', 'g2', 'g3'].map((id) => (
@@ -52,6 +42,7 @@ export function SchoolPage() {
           <Button to={loc('/apply')}>{t('nav.apply')}</Button>
         </div>
       </Section>
+      <CtaBand />
     </>
   )
 }

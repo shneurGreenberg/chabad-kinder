@@ -1,5 +1,7 @@
-import { NavLink, Navigate, Outlet } from 'react-router-dom'
+import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { FamilyProvider } from '../context/FamilyContext'
 import { useAuth } from '../context/AuthContext'
 import { parentDemo } from '../data/mock'
 import { useLang, useLoc } from '../lib/hooks'
@@ -78,70 +80,80 @@ export function PortalLayout() {
   const loc = useLoc()
   const lang = useLang()
   const { user, logout } = useAuth()
+  const location = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [location.pathname])
 
   if (!user) return <Navigate to={loc('/login')} replace />
 
   return (
-    <div className="min-h-screen bg-cream text-ink">
-      <header className="sticky top-0 z-40 border-b border-navy/5 bg-navy text-cream">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-          <Logo to={loc('/portal')} compact />
-          <div className="min-w-0">
-            <p className="truncate text-sm text-cream/70">{t('portal.hello')}</p>
-            <p className="truncate font-semibold">{parentDemo.name[lang]}</p>
+    <FamilyProvider>
+      <div className="min-h-screen bg-cream text-ink">
+        <header className="sticky top-0 z-40 border-b border-navy/5 bg-navy text-cream">
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
+            <Logo to={loc('/portal')} compact />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm text-cream/70">{t('portal.hello')}</p>
+              <p className="truncate font-semibold">{parentDemo.name[lang]}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <NavLink to={loc()} className="hidden text-xs text-gold no-underline sm:inline">
+                {t('portal.toSite')}
+              </NavLink>
+              <LanguageSwitcher light />
+              <button
+                type="button"
+                onClick={logout}
+                className="rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold"
+              >
+                {t('portal.logout')}
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <LanguageSwitcher light />
-            <button
-              type="button"
-              onClick={logout}
-              className="rounded-full border border-white/20 px-3 py-1.5 text-xs font-semibold"
-            >
-              {t('portal.logout')}
-            </button>
-          </div>
-        </div>
-        <nav className="hidden overflow-x-auto md:block">
-          <div className="mx-auto flex max-w-6xl gap-1 px-4 pb-2">
+          <nav className="hidden overflow-x-auto md:block">
+            <div className="mx-auto flex max-w-6xl gap-1 px-4 pb-2">
+              {tabs.map((tab) => (
+                <NavLink
+                  key={tab.to}
+                  to={loc(`/portal${tab.to}`)}
+                  end={tab.to === ''}
+                  className={({ isActive }) =>
+                    `rounded-full px-3 py-1.5 text-sm no-underline ${
+                      isActive ? 'bg-gold text-navy' : 'text-cream/80 hover:text-white'
+                    }`
+                  }
+                >
+                  {t(tab.key)}
+                </NavLink>
+              ))}
+            </div>
+          </nav>
+        </header>
+        <main className="mx-auto max-w-6xl px-4 py-6 pb-28 md:pb-10">
+          <Outlet />
+        </main>
+        <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-navy/10 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
+          <div className="grid grid-cols-7">
             {tabs.map((tab) => (
               <NavLink
                 key={tab.to}
                 to={loc(`/portal${tab.to}`)}
                 end={tab.to === ''}
                 className={({ isActive }) =>
-                  `rounded-full px-3 py-1.5 text-sm no-underline ${
-                    isActive ? 'bg-gold text-navy' : 'text-cream/80 hover:text-white'
+                  `flex flex-col items-center gap-1 py-2 text-[10px] no-underline ${
+                    isActive ? 'text-gold' : 'text-muted'
                   }`
                 }
               >
-                {t(tab.key)}
+                <Icon name={tab.icon} />
+                <span className="max-w-full truncate px-0.5">{t(tab.key)}</span>
               </NavLink>
             ))}
           </div>
         </nav>
-      </header>
-      <main className="mx-auto max-w-6xl px-4 py-6 pb-24 md:pb-10">
-        <Outlet />
-      </main>
-      <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-navy/10 bg-white/95 backdrop-blur md:hidden">
-        <div className="grid grid-cols-7">
-          {tabs.map((tab) => (
-            <NavLink
-              key={tab.to}
-              to={loc(`/portal${tab.to}`)}
-              end={tab.to === ''}
-              className={({ isActive }) =>
-                `flex flex-col items-center gap-1 py-2 text-[10px] no-underline ${
-                  isActive ? 'text-gold' : 'text-muted'
-                }`
-              }
-            >
-              <Icon name={tab.icon} />
-              {t(tab.key)}
-            </NavLink>
-          ))}
-        </div>
-      </nav>
-    </div>
+      </div>
+    </FamilyProvider>
   )
 }

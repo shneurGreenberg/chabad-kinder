@@ -13,13 +13,15 @@
     "login": "Parent login",
     "portal": "Portal",
     "menu": "Menu",
-    "close": "Close"
+    "close": "Close",
+    "skip": "Skip to content"
   },
   "footer": {
     "hours": "Sun–Thu 7:30–16:30 · Fri 7:30–12:30",
     "address": "12 Nachala Street, Jerusalem",
     "rights": "Demo site. Photographs are illustrative.",
-    "shabbat": "The campus is closed on Shabbat and Jewish festivals."
+    "shabbat": "The campus is closed on Shabbat and Jewish festivals.",
+    "explore": "Explore"
   },
   "home": {
     "kicker": "A Chabad home for learning",
@@ -31,7 +33,8 @@
     "ganText": "Full day, half day, hourly clubs, and emergency care — at a young child's pace.",
     "schoolCard": "School",
     "schoolText": "Small classes, Torah and general studies, and a community that stays with the child.",
-    "newsTitle": "This week",
+    "newsKicker": "This week",
+    "newsTitle": "What is happening",
     "galleryTitle": "A day with us",
     "valuesTitle": "What we keep",
     "v1t": "Respect for the child",
@@ -39,7 +42,17 @@
     "v2t": "Shabbat and festivals",
     "v2d": "The Jewish calendar is the rhythm of the week, not decoration.",
     "v3t": "Partnership with home",
-    "v3d": "Parents know the day — without chasing messages."
+    "v3d": "Parents know the day — without chasing messages.",
+    "stat1n": "Three languages",
+    "stat1d": "Hebrew in class, English and Russian for parents.",
+    "stat2n": "Gan and school",
+    "stat2d": "One campus, from age one to grade 6.",
+    "stat3n": "Kosher kitchen",
+    "stat3d": "Mehadrin, with a weekly menu in the portal.",
+    "quote": "Our daughter comes home calm. That is all we asked for — without big words.",
+    "quoteBy": "A gan mother, Russian-speaking family",
+    "finalTitle": "Come see the courtyard",
+    "finalLead": "Five minutes in the wizard, then we call — not a long form."
   },
   "gan": {
     "kicker": "Kinder gan",
@@ -47,6 +60,8 @@
     "lead": "Four ways to stay, a stable team, and a kosher kitchen. You choose the pace. We keep the child.",
     "dayTitle": "A typical day",
     "menuTitle": "The kitchen",
+    "kitchenLead": "Mehadrin kashrut. Allergies marked. The menu updates in the portal.",
+    "ageRange": "From age one through pre-school",
     "staffTitle": "The team",
     "full": "Full day",
     "fullD": "7:30–16:30. Play, meals, rest, and the yard.",
@@ -91,7 +106,8 @@
     "fri": "Friday",
     "friD": "Studies 8:00–12:00, toward Shabbat",
     "sat": "Shabbat",
-    "satD": "Campus closed. Family at home."
+    "satD": "Campus closed. Family at home.",
+    "priceNote": "₪2,200 a month, including lunch."
   },
   "life": {
     "kicker": "Campus life",
@@ -138,7 +154,9 @@
     "send": "Send",
     "sent": "Saved on this device. On a live site this would reach the office.",
     "phoneValue": "02-555-0148",
-    "emailValue": "office@chabad-kinder.demo"
+    "emailValue": "office@chabad-kinder.demo",
+    "call": "Call",
+    "mail": "Email"
   },
   "login": {
     "kicker": "Parent portal",
@@ -180,6 +198,8 @@
     "aboutShort": "Gan and school share one campus. Kosher kitchen, a stable team, and gentle Hebrew with Russian and English for parents.",
     "faqCta": "More frequent questions",
     "applyCta": "Send an application",
+    "continue": "Continue",
+    "stepOf": "Step {{current}} of {{total}}",
     "formTitle": "Electronic application",
     "parentName": "Parent name",
     "childName": "Child name",
@@ -251,12 +271,20 @@
     "achievements": "Achievements",
     "reports": "Physical and emotional notes",
     "comments": "Personal comments",
-    "photoReports": "Album"
+    "photoReports": "Album",
+    "toSite": "Website",
+    "quickActions": "Quick actions",
+    "anotherReport": "Another report",
+    "monthLabel": "August 2026",
+    "selectDay": "Choose a day on the calendar to report"
   },
   "common": {
     "ils": "₪",
     "learn": "Learn more",
     "today": "Today",
-    "demo": "Demo"
+    "demo": "Demo",
+    "perMonth": "per month",
+    "perHour": "per hour",
+    "perDay": "per day"
   }
 }

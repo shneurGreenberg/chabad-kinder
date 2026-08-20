@@ -1,31 +1,19 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { achievements, children, developmentNotes, gallery, teacherComments } from '../../data/mock'
+import { ChildSwitcher } from '../../components/ChildSwitcher'
+import { Card } from '../../components/ui'
+import { useFamily } from '../../context/FamilyContext'
+import { achievements, developmentNotes, gallery, teacherComments } from '../../data/mock'
 import { useLang } from '../../lib/hooks'
 import { asset } from '../../lib/paths'
-import { Card } from '../../components/ui'
 
 export function PhotosPage() {
   const { t } = useTranslation()
   const lang = useLang()
-  const [childId, setChildId] = useState(children[0].id)
+  const { childId } = useFamily()
 
   return (
     <div className="grid gap-5">
-      <div className="flex flex-wrap gap-2">
-        {children.map((child) => (
-          <button
-            key={child.id}
-            type="button"
-            onClick={() => setChildId(child.id)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold ${
-              childId === child.id ? 'bg-navy text-cream' : 'bg-white text-navy'
-            }`}
-          >
-            {child.name[lang]}
-          </button>
-        ))}
-      </div>
+      <ChildSwitcher />
       <Card>
         <h1 className="font-display text-2xl text-navy">{t('portal.photoReports')}</h1>
         <div className="mt-4 grid grid-cols-2 gap-3">

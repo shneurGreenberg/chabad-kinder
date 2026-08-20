@@ -86,16 +86,47 @@ export const staff = [
     id: 's1',
     role: { he: 'מנהלת', en: 'Director', ru: 'Директор' },
     name: { he: 'רבקה לוי', en: 'Rivka Levi', ru: 'Рівка Леви' },
+    bio: {
+      he: 'עשר שנים בחינוך חב״ד. מדברת עברית, אנגלית ורוסית עם ההורים.',
+      en: 'Ten years in Chabad education. Speaks Hebrew, English and Russian with parents.',
+      ru: 'Десять лет в образовании Хабад. С родителями говорит на иврите, английском и русском.',
+    },
   },
   {
     id: 's2',
     role: { he: 'גננת ראשית', en: 'Lead teacher', ru: 'Старший воспитатель' },
     name: { he: 'חיה גולד', en: 'Chaya Gold', ru: 'Хая Гольд' },
+    bio: {
+      he: 'אחראית על הגיל הרך. שמה לב לפרידה בבוקר ולשינה בצהריים.',
+      en: 'Leads early years. Pays attention to morning goodbye and afternoon rest.',
+      ru: 'Отвечает за малышей. Следит за утренним прощанием и дневным сном.',
+    },
   },
   {
     id: 's3',
     role: { he: 'מחנך כיתה ב׳', en: 'Grade 2 teacher', ru: 'Учитель 2 класса' },
     name: { he: 'יוסף מזרחי', en: 'Yosef Mizrahi', ru: 'Йосеф Мизрахи' },
+    bio: {
+      he: 'מלמד קודש וחול באותו קול. בחצר הוא הראשון עם הכדור.',
+      en: 'Teaches Torah and general studies in the same voice. First with the ball in the yard.',
+      ru: 'Преподаёт Тору и светские предметы одним голосом. Во дворе первым берёт мяч.',
+    },
+  },
+]
+
+export const quotes = [
+  {
+    id: 'q1',
+    text: {
+      he: 'הילדה חוזרת הביתה רגועה. זה כל מה שביקשתי, בלי מילים גדולות.',
+      en: 'Our daughter comes home calm. That is all we asked for — without big words.',
+      ru: 'Дочь возвращается домой спокойной. Это всё, что мы просили — без громких слов.',
+    },
+    by: {
+      he: 'אם בגן, משפחה דוברת רוסית',
+      en: 'A gan mother, Russian-speaking family',
+      ru: 'Мама из сада, русскоязычная семья',
+    },
   },
 ]
 
@@ -167,9 +198,9 @@ export const reminders = [
 ]
 
 export const upcoming = [
-  { id: 'u1', when: '08:00', title: { he: 'נעה · מעגל בוקר', en: 'Noa · morning circle', ru: 'Ноа · утренний круг' } },
-  { id: 'u2', when: '15:15', title: { he: 'נעה · חוג אמנות', en: 'Noa · art club', ru: 'Ноа · кружок искусства' } },
-  { id: 'u3', when: '10:00', title: { he: 'יוסף · פרשה', en: 'Yosef · parsha', ru: 'Йосеф · недельная глава' } },
+  { id: 'u1', childId: 'noa', when: '08:00', title: { he: 'מעגל בוקר', en: 'Morning circle', ru: 'Утренний круг' } },
+  { id: 'u2', childId: 'noa', when: '15:15', title: { he: 'חוג אמנות', en: 'Art club', ru: 'Кружок искусства' } },
+  { id: 'u3', childId: 'yosef', when: '10:00', title: { he: 'פרשה', en: 'Parsha', ru: 'Недельная глава' } },
 ]
 
 export const clubs = [
