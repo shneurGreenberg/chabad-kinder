@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useAuth } from '../context/AuthContext'
+import { homePath, useAuth } from '../context/AuthContext'
 import { useLoc } from '../lib/hooks'
 import { Button, Logo } from './ui'
 import { LanguageSwitcher } from './LanguageSwitcher'
@@ -64,8 +64,8 @@ export function PublicLayout() {
           </nav>
           <div className="hidden items-center gap-3 lg:flex">
             <LanguageSwitcher />
-            <Button to={user ? loc('/portal') : loc('/login')} variant="navy">
-              {user ? t('nav.portal') : t('nav.login')}
+            <Button to={user ? loc(homePath(user.role)) : loc('/login')} variant="navy">
+              {user ? (user.role === 'admin' ? t('nav.admin') : t('nav.portal')) : t('nav.login')}
             </Button>
             <Button to={loc('/apply')}>{t('nav.apply')}</Button>
           </div>
@@ -93,8 +93,8 @@ export function PublicLayout() {
             </div>
             <div className="mt-4 flex flex-wrap items-center gap-3">
               <LanguageSwitcher />
-              <Button to={user ? loc('/portal') : loc('/login')} variant="navy">
-                {user ? t('nav.portal') : t('nav.login')}
+              <Button to={user ? loc(homePath(user.role)) : loc('/login')} variant="navy">
+                {user ? (user.role === 'admin' ? t('nav.admin') : t('nav.portal')) : t('nav.login')}
               </Button>
               <Button to={loc('/apply')}>{t('nav.apply')}</Button>
             </div>

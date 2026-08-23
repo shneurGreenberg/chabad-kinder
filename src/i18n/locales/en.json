@@ -12,6 +12,7 @@
     "apply": "Apply",
     "login": "Parent login",
     "portal": "Portal",
+    "admin": "Admin",
     "menu": "Menu",
     "close": "Close",
     "skip": "Skip to content"
@@ -165,7 +166,10 @@
     "email": "Email",
     "password": "Password",
     "submit": "Sign in",
-    "hint": "Demo: parent@demo.local · demo",
+    "hint": "Parent: parent@demo.local · demo",
+    "adminHint": "Admin: admin@demo.local · demo",
+    "asParent": "Parent sign-in",
+    "asAdmin": "Admin sign-in",
     "error": "Email or password does not match the demo account.",
     "back": "Back to the site"
   },
@@ -286,5 +290,104 @@
     "perMonth": "per month",
     "perHour": "per hour",
     "perDay": "per day"
+  },
+  "admin": {
+    "kicker": "Administration",
+    "title": "Campus office",
+    "save": "Save",
+    "open": "Open",
+    "nav": {
+      "home": "Overview",
+      "children": "Children",
+      "applications": "Applications",
+      "staff": "Staff",
+      "tariffs": "Tariffs",
+      "attendance": "Attendance",
+      "finance": "Finance",
+      "clubs": "Clubs",
+      "campus": "News and menu",
+      "messages": "Support"
+    },
+    "dash": {
+      "title": "Good morning. Here is what needs you.",
+      "lead": "New children, balances, and today's attendance — without chasing WhatsApp.",
+      "active": "Active children",
+      "incoming": "New children",
+      "apps": "Pending applications",
+      "present": "Present today",
+      "staff": "Active staff",
+      "debt": "Open debt",
+      "today": "Applications waiting"
+    },
+    "children": {
+      "register": "Register a child",
+      "active": "Active",
+      "incoming": "New",
+      "alumni": "Alumni archive",
+      "childName": "Child name",
+      "track": "Track",
+      "teacher": "Teacher",
+      "accept": "Accept to group",
+      "graduate": "Move to archive",
+      "restore": "Restore"
+    },
+    "apps": {
+      "lead": "Wizard applications and new requests. Approval creates a child card in the new list.",
+      "new": "New",
+      "accepted": "Accepted",
+      "declined": "Declined",
+      "accept": "Accept",
+      "decline": "Decline"
+    },
+    "staff": {
+      "add": "Add staff",
+      "role": "Role",
+      "admin": "Admin",
+      "teacher": "Teacher",
+      "kitchen": "Kitchen",
+      "disable": "Disable access",
+      "enable": "Enable access",
+      "access": {
+        "children": "Children",
+        "attendance": "Attendance",
+        "finance": "Finance",
+        "messages": "Messages",
+        "photos": "Photos"
+      }
+    },
+    "tariffs": {
+      "lead": "Create as many tariffs as you need: full day, half day, clubs, emergency stay, and more.",
+      "add": "New tariff",
+      "name": "Tariff name",
+      "amount": "Amount",
+      "unit": "Unit",
+      "pause": "Pause",
+      "resume": "Resume"
+    },
+    "attendance": {
+      "lead": "Mark today's attendance for every active child."
+    },
+    "finance": {
+      "lead": "Balances by child. Demo collection updates the debt.",
+      "collect": "Mark as paid"
+    },
+    "clubs": {
+      "lead": "Places, waitlist and enrolment.",
+      "addSpot": "Take a place",
+      "freeSpot": "Free a place"
+    },
+    "campus": {
+      "publish": "New announcement",
+      "title": "Title",
+      "menu": "Weekly menu"
+    },
+    "messages": {
+      "lead": "Support chat with parents. In this demo: the Cohen family.",
+      "family": "Cohen family"
+    },
+    "empty": {
+      "apps": "No pending applications.",
+      "generic": "Nothing in this list."
+    }
   }
 }

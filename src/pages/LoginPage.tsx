@@ -2,7 +2,8 @@ import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { LanguageSwitcher } from '../components/LanguageSwitcher'
-import { useAuth } from '../context/AuthContext'
+import { homePath, useAuth } from '../context/AuthContext'
+import { adminDemo, parentDemo } from '../data/mock'
 import { useLoc } from '../lib/hooks'
 import { Button, Card, Field, Logo, Section, inputClass } from '../components/ui'
 
@@ -13,7 +14,9 @@ export function LoginPage() {
   const navigate = useNavigate()
   const [error, setError] = useState(false)
 
-  if (user) return <Navigate to={loc('/portal')} replace />
+  const [email, setEmail] = useState(parentDemo.email)
+
+  if (user) return <Navigate to={loc(homePath(user.role))} replace />
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -23,7 +26,8 @@ export function LoginPage() {
       setError(true)
       return
     }
-    navigate(loc('/portal'))
+    const role = String(data.get('email') || '').toLowerCase() === adminDemo.email ? 'admin' : 'parent'
+    navigate(loc(homePath(role)))
   }
 
   return (
@@ -40,7 +44,7 @@ export function LoginPage() {
           <p className="mt-2 text-muted">{t('login.lead')}</p>
           <form className="mt-6 grid gap-4" onSubmit={onSubmit}>
             <Field label={t('login.email')}>
-              <input name="email" type="email" required className={inputClass} defaultValue="parent@demo.local" />
+              <input name="email" type="email" required className={inputClass} value={email} onChange={(e) => setEmail(e.target.value)} />
             </Field>
             <Field label={t('login.password')}>
               <input name="password" type="password" required className={inputClass} defaultValue="demo" />
@@ -48,7 +52,16 @@ export function LoginPage() {
             {error && <p className="text-sm text-terracotta">{t('login.error')}</p>}
             <Button type="submit">{t('login.submit')}</Button>
           </form>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button variant="ghost" onClick={() => setEmail(parentDemo.email)}>
+              {t('login.asParent')}
+            </Button>
+            <Button variant="ghost" onClick={() => setEmail(adminDemo.email)}>
+              {t('login.asAdmin')}
+            </Button>
+          </div>
           <p className="mt-4 text-sm text-muted">{t('login.hint')}</p>
+          <p className="mt-1 text-sm text-muted">{t('login.adminHint')}</p>
           <Link to={loc()} className="mt-4 inline-block text-sm text-navy">
             {t('login.back')}
           </Link>

@@ -11,8 +11,19 @@ import { FaqPage } from './pages/FaqPage'
 import { GanPage } from './pages/GanPage'
 import { HomePage } from './pages/HomePage'
 import { LifePage } from './pages/LifePage'
+import { AdminLayout } from './components/AdminLayout'
 import { LoginPage } from './pages/LoginPage'
 import { SchoolPage } from './pages/SchoolPage'
+import { AdminApplications } from './pages/admin/AdminApplications'
+import { AdminAttendance } from './pages/admin/AdminAttendance'
+import { AdminCampus } from './pages/admin/AdminCampus'
+import { AdminChildren } from './pages/admin/AdminChildren'
+import { AdminClubs } from './pages/admin/AdminClubs'
+import { AdminDashboard } from './pages/admin/AdminDashboard'
+import { AdminFinance } from './pages/admin/AdminFinance'
+import { AdminMessages } from './pages/admin/AdminMessages'
+import { AdminStaff } from './pages/admin/AdminStaff'
+import { AdminTariffs } from './pages/admin/AdminTariffs'
 import { AttendancePage } from './pages/portal/AttendancePage'
 import { ChildPage } from './pages/portal/ChildPage'
 import { ClubsPage } from './pages/portal/ClubsPage'
@@ -66,6 +77,18 @@ export default function App() {
               <Route path="clubs" element={<ClubsPage />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="photos" element={<PhotosPage />} />
+            </Route>
+            <Route path="admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="children" element={<AdminChildren />} />
+              <Route path="applications" element={<AdminApplications />} />
+              <Route path="staff" element={<AdminStaff />} />
+              <Route path="tariffs" element={<AdminTariffs />} />
+              <Route path="attendance" element={<AdminAttendance />} />
+              <Route path="finance" element={<AdminFinance />} />
+              <Route path="clubs" element={<AdminClubs />} />
+              <Route path="campus" element={<AdminCampus />} />
+              <Route path="messages" element={<AdminMessages />} />
             </Route>
           </Route>
           <Route path="*" element={<Navigate to="/he" replace />} />

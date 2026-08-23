@@ -3,7 +3,6 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FamilyProvider } from '../context/FamilyContext'
 import { useAuth } from '../context/AuthContext'
-import { parentDemo } from '../data/mock'
 import { useLang, useLoc } from '../lib/hooks'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { Logo } from './ui'
@@ -87,6 +86,7 @@ export function PortalLayout() {
   }, [location.pathname])
 
   if (!user) return <Navigate to={loc('/login')} replace />
+  if (user.role === 'admin') return <Navigate to={loc('/admin')} replace />
 
   return (
     <FamilyProvider>
@@ -96,7 +96,7 @@ export function PortalLayout() {
             <Logo to={loc('/portal')} compact />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm text-cream/70">{t('portal.hello')}</p>
-              <p className="truncate font-semibold">{parentDemo.name[lang]}</p>
+              <p className="truncate font-semibold">{user.name[lang]}</p>
             </div>
             <div className="flex items-center gap-2">
               <NavLink to={loc()} className="hidden text-xs text-gold no-underline sm:inline">

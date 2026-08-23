@@ -136,6 +136,12 @@ export const parentDemo = {
   name: { he: 'מיכל כהן', en: 'Michal Cohen', ru: 'Михаль Коэн' },
 }
 
+export const adminDemo = {
+  email: 'admin@demo.local',
+  password: 'demo',
+  name: { he: 'רבקה לוי', en: 'Rivka Levi', ru: 'Рівка Леви' },
+}
+
 export const children = [
   {
     id: 'noa',
