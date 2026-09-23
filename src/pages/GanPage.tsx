@@ -1,36 +1,36 @@
 import { useTranslation } from 'react-i18next'
-import { staff, tariffs, weekMenu } from '../data/mock'
+import { useContent } from '../context/ContentContext'
 import { formatMoney } from '../lib/format'
 import { useLang, useLoc } from '../lib/hooks'
 import { Button, Card, CtaBand, PageHero, Section } from '../components/ui'
 
-const tracks = [
-  { key: 'full' as const, unit: 'perMonth' },
-  { key: 'half' as const, unit: 'perMonth' },
-  { key: 'hourly' as const, unit: 'perHour' },
-  { key: 'emergency' as const, unit: 'perDay' },
-]
-
 const day = ['d1', 'd2', 'd3', 'd4', 'd5'] as const
+
+function unitKey(unit: 'month' | 'hour' | 'day'): 'perMonth' | 'perHour' | 'perDay' {
+  if (unit === 'month') return 'perMonth'
+  if (unit === 'hour') return 'perHour'
+  return 'perDay'
+}
 
 export function GanPage() {
   const { t } = useTranslation()
   const loc = useLoc()
   const lang = useLang()
+  const { content } = useContent()
 
   return (
     <>
       <PageHero image="images/gan-classroom.png" kicker={t('gan.kicker')} title={t('gan.title')} lead={t('gan.ageRange')} />
       <Section lead={t('gan.lead')}>
         <div className="grid gap-4 md:grid-cols-2">
-          {tracks.map((track) => (
-            <Card key={track.key} className="flex flex-col justify-between">
+          {content.programs.gan.filter(p => p.active).map((program) => (
+            <Card key={program.id} className="flex flex-col justify-between">
               <div>
-                <p className="font-display text-2xl text-navy">{t(`gan.${track.key}`)}</p>
-                <p className="mt-2 text-muted">{t(`gan.${track.key}D`)}</p>
+                <p className="font-display text-2xl text-navy">{program.name[lang]}</p>
+                <p className="mt-2 text-muted">{program.description[lang]}</p>
               </div>
               <p className="mt-4 text-sm font-semibold text-gold">
-                {formatMoney(tariffs[track.key].amount, lang)} {t(`common.${track.unit}`)}
+                {formatMoney(program.amount, lang)} {t(`common.${unitKey(program.unit)}`)}
               </p>
             </Card>
           ))}
@@ -51,8 +51,8 @@ export function GanPage() {
       </Section>
       <Section kicker={t('gan.menuTitle')} title={t('gan.menuTitle')} lead={t('gan.kitchenLead')}>
         <div className="overflow-hidden rounded-3xl bg-white">
-          {weekMenu.map((row) => (
-            <div key={row.day.en} className="flex items-center justify-between gap-4 border-b border-navy/5 px-5 py-4 last:border-0">
+          {content.menu.map((row) => (
+            <div key={row.id} className="flex items-center justify-between gap-4 border-b border-navy/5 px-5 py-4 last:border-0">
               <span className="font-semibold text-navy">{row.day[lang]}</span>
               <span className="text-muted">{row.dish[lang]}</span>
             </div>
@@ -61,7 +61,7 @@ export function GanPage() {
       </Section>
       <Section kicker={t('gan.staffTitle')} title={t('gan.staffTitle')}>
         <div className="grid gap-4 md:grid-cols-3">
-          {staff.map((person) => (
+          {content.staff.filter(s => s.active).map((person) => (
             <Card key={person.id}>
               <p className="text-sm text-gold">{person.role[lang]}</p>
               <p className="mt-1 font-display text-2xl text-navy">{person.name[lang]}</p>

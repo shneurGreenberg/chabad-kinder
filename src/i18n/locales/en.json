@@ -298,6 +298,8 @@
     "open": "Open",
     "nav": {
       "home": "Overview",
+      "content": "Site Content",
+      "github": "GitHub",
       "children": "Children",
       "applications": "Applications",
       "staff": "Staff",

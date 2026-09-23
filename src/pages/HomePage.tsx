@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { gallery, news, quotes } from '../data/mock'
+import { useContent } from '../context/ContentContext'
 import { formatDate } from '../lib/format'
 import { useLang, useLoc } from '../lib/hooks'
 import { asset } from '../lib/paths'
@@ -10,7 +10,8 @@ export function HomePage() {
   const { t } = useTranslation()
   const loc = useLoc()
   const lang = useLang()
-  const quote = quotes[0]
+  const { content } = useContent()
+  const quote = content.homepage.quotes[0]
 
   return (
     <>
@@ -22,11 +23,11 @@ export function HomePage() {
         />
         <div className="hero-scrim absolute inset-0" />
         <div className="relative mx-auto flex min-h-[82vh] max-w-6xl flex-col justify-end px-5 pb-16 pt-28 text-cream">
-          <p className="text-xs font-semibold tracking-[0.2em] text-gold-soft uppercase">{t('home.kicker')}</p>
+          <p className="text-xs font-semibold tracking-[0.2em] text-gold-soft uppercase">{content.homepage.hero.kicker[lang]}</p>
           <h1 className="mt-4 max-w-3xl font-display text-4xl leading-tight font-semibold md:text-6xl">
-            {t('home.title')}
+            {content.homepage.hero.title[lang]}
           </h1>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-cream/85">{t('home.lead')}</p>
+          <p className="mt-5 max-w-xl text-lg leading-relaxed text-cream/85">{content.homepage.hero.lead[lang]}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Button to={loc('/apply')}>{t('home.ctaApply')}</Button>
             <Button to={loc('/login')} variant="cream">
@@ -38,10 +39,10 @@ export function HomePage() {
 
       <section className="border-b border-navy/5 bg-white">
         <div className="mx-auto grid max-w-6xl gap-6 px-5 py-10 md:grid-cols-3">
-          {[1, 2, 3].map((n) => (
-            <div key={n}>
-              <p className="font-display text-2xl text-navy">{t(`home.stat${n}n`)}</p>
-              <p className="mt-1 text-muted">{t(`home.stat${n}d`)}</p>
+          {content.homepage.stats.map((stat) => (
+            <div key={stat.id}>
+              <p className="font-display text-2xl text-navy">{stat.number[lang]}</p>
+              <p className="mt-1 text-muted">{stat.description[lang]}</p>
             </div>
           ))}
         </div>
@@ -72,7 +73,7 @@ export function HomePage() {
 
       <Section kicker={t('home.newsKicker')} title={t('home.newsTitle')}>
         <div className="grid gap-4 md:grid-cols-3">
-          {news.map((item) => (
+          {content.news.slice(0, 3).map((item) => (
             <Card key={item.id}>
               <p className="text-xs tracking-wide text-gold">{formatDate(item.date, lang)}</p>
               <h3 className="mt-2 font-display text-xl text-navy">{item.title[lang]}</h3>
@@ -84,8 +85,8 @@ export function HomePage() {
 
       <Section kicker={t('home.galleryTitle')} title={t('home.galleryTitle')}>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          {gallery.map((shot) => (
-            <figure key={shot.src} className="overflow-hidden rounded-3xl bg-white">
+          {content.gallery.sort((a, b) => a.order - b.order).map((shot) => (
+            <figure key={shot.id} className="overflow-hidden rounded-3xl bg-white">
               <img src={asset(shot.src)} alt={shot.caption[lang]} className="h-48 w-full object-cover md:h-56" />
               <figcaption className="px-3 py-2 text-sm text-muted">{shot.caption[lang]}</figcaption>
             </figure>
@@ -100,10 +101,10 @@ export function HomePage() {
 
       <Section kicker={t('home.valuesTitle')} title={t('home.valuesTitle')}>
         <div className="grid gap-4 md:grid-cols-3">
-          {[1, 2, 3].map((n) => (
-            <Card key={n} className="bg-navy text-cream">
-              <h3 className="font-display text-2xl text-gold">{t(`home.v${n}t`)}</h3>
-              <p className="mt-2 text-cream/80">{t(`home.v${n}d`)}</p>
+          {content.homepage.values.map((value) => (
+            <Card key={value.id} className="bg-navy text-cream">
+              <h3 className="font-display text-2xl text-gold">{value.title[lang]}</h3>
+              <p className="mt-2 text-cream/80">{value.description[lang]}</p>
             </Card>
           ))}
         </div>
