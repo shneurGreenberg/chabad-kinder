@@ -11,7 +11,7 @@ export function HomePage() {
   const loc = useLoc()
   const lang = useLang()
   const { content } = useContent()
-  const quote = content.homepage.quotes[0]
+  const quote = content.homepage.quotes?.[0]
 
   return (
     <>
@@ -37,16 +37,18 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="border-b border-navy/5 bg-white">
-        <div className="mx-auto grid max-w-6xl gap-6 px-5 py-10 md:grid-cols-3">
-          {content.homepage.stats.map((stat) => (
-            <div key={stat.id}>
-              <p className="font-display text-2xl text-navy">{stat.number[lang]}</p>
-              <p className="mt-1 text-muted">{stat.description[lang]}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      {content.homepage.stats && content.homepage.stats.length > 0 && (
+        <section className="border-b border-navy/5 bg-white">
+          <div className="mx-auto grid max-w-6xl gap-6 px-5 py-10 md:grid-cols-3">
+            {content.homepage.stats.map((stat) => (
+              <div key={stat.id}>
+                <p className="font-display text-2xl text-navy">{stat.number[lang]}</p>
+                <p className="mt-1 text-muted">{stat.description[lang]}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <Section>
         <div className="grid gap-5 md:grid-cols-2">
@@ -71,48 +73,56 @@ export function HomePage() {
         </div>
       </Section>
 
-      <Section kicker={t('home.newsKicker')} title={t('home.newsTitle')}>
-        <div className="grid gap-4 md:grid-cols-3">
-          {content.news.slice(0, 3).map((item) => (
-            <Card key={item.id}>
-              <p className="text-xs tracking-wide text-gold">{formatDate(item.date, lang)}</p>
-              <h3 className="mt-2 font-display text-xl text-navy">{item.title[lang]}</h3>
-              <p className="mt-2 text-muted">{item.body[lang]}</p>
-            </Card>
-          ))}
-        </div>
-      </Section>
+      {content.news && content.news.length > 0 && (
+        <Section kicker={t('home.newsKicker')} title={t('home.newsTitle')}>
+          <div className="grid gap-4 md:grid-cols-3">
+            {content.news.slice(0, 3).map((item) => (
+              <Card key={item.id}>
+                <p className="text-xs tracking-wide text-gold">{formatDate(item.date, lang)}</p>
+                <h3 className="mt-2 font-display text-xl text-navy">{item.title[lang]}</h3>
+                <p className="mt-2 text-muted">{item.body[lang]}</p>
+              </Card>
+            ))}
+          </div>
+        </Section>
+      )}
 
-      <Section kicker={t('home.galleryTitle')} title={t('home.galleryTitle')}>
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          {content.gallery.sort((a, b) => a.order - b.order).map((shot) => (
-            <figure key={shot.id} className="overflow-hidden rounded-3xl bg-white">
-              <img src={asset(shot.src)} alt={shot.caption[lang]} className="h-48 w-full object-cover md:h-56" />
-              <figcaption className="px-3 py-2 text-sm text-muted">{shot.caption[lang]}</figcaption>
-            </figure>
-          ))}
-        </div>
-        <div className="mt-6">
-          <Button to={loc('/life')} variant="navy">
-            {t('nav.life')}
-          </Button>
-        </div>
-      </Section>
+      {content.gallery && content.gallery.length > 0 && (
+        <Section kicker={t('home.galleryTitle')} title={t('home.galleryTitle')}>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            {content.gallery.sort((a, b) => a.order - b.order).map((shot) => (
+              <figure key={shot.id} className="overflow-hidden rounded-3xl bg-white">
+                <img src={asset(shot.src)} alt={shot.caption[lang]} className="h-48 w-full object-cover md:h-56" />
+                <figcaption className="px-3 py-2 text-sm text-muted">{shot.caption[lang]}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <div className="mt-6">
+            <Button to={loc('/life')} variant="navy">
+              {t('nav.life')}
+            </Button>
+          </div>
+        </Section>
+      )}
 
-      <Section kicker={t('home.valuesTitle')} title={t('home.valuesTitle')}>
-        <div className="grid gap-4 md:grid-cols-3">
-          {content.homepage.values.map((value) => (
-            <Card key={value.id} className="bg-navy text-cream">
-              <h3 className="font-display text-2xl text-gold">{value.title[lang]}</h3>
-              <p className="mt-2 text-cream/80">{value.description[lang]}</p>
-            </Card>
-          ))}
-        </div>
-        <blockquote className="mt-10 rounded-[2rem] bg-white px-8 py-10">
-          <p className="font-display text-2xl leading-relaxed text-navy md:text-3xl">“{quote.text[lang]}”</p>
-          <footer className="mt-4 text-sm text-gold">{quote.by[lang]}</footer>
-        </blockquote>
-      </Section>
+      {content.homepage.values && content.homepage.values.length > 0 && (
+        <Section kicker={t('home.valuesTitle')} title={t('home.valuesTitle')}>
+          <div className="grid gap-4 md:grid-cols-3">
+            {content.homepage.values.map((value) => (
+              <Card key={value.id} className="bg-navy text-cream">
+                <h3 className="font-display text-2xl text-gold">{value.title[lang]}</h3>
+                <p className="mt-2 text-cream/80">{value.description[lang]}</p>
+              </Card>
+            ))}
+          </div>
+          {quote && (
+            <blockquote className="mt-10 rounded-[2rem] bg-white px-8 py-10">
+              <p className="font-display text-2xl leading-relaxed text-navy md:text-3xl">"{quote.text[lang]}"</p>
+              <footer className="mt-4 text-sm text-gold">{quote.by[lang]}</footer>
+            </blockquote>
+          )}
+        </Section>
+      )}
 
       <CtaBand />
     </>
