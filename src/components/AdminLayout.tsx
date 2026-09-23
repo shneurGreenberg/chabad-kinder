@@ -9,6 +9,7 @@ import { Logo } from './ui'
 
 const tabs = [
   { to: '', key: 'admin.nav.home' },
+  { to: '/content', key: 'admin.nav.content' },
   { to: '/children', key: 'admin.nav.children' },
   { to: '/applications', key: 'admin.nav.applications' },
   { to: '/staff', key: 'admin.nav.staff' },

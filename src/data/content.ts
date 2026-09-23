@@ -1,0 +1,344 @@
+import type { Text } from './mock'
+
+export type SiteContent = {
+  homepage: {
+    hero: {
+      kicker: Text
+      title: Text
+      lead: Text
+    }
+    stats: Array<{
+      id: string
+      number: Text
+      description: Text
+    }>
+    values: Array<{
+      id: string
+      title: Text
+      description: Text
+    }>
+    quotes: Array<{
+      id: string
+      text: Text
+      by: Text
+    }>
+  }
+  programs: {
+    gan: Array<{
+      id: string
+      name: Text
+      description: Text
+      amount: number
+      unit: 'month' | 'hour' | 'day'
+      active: boolean
+    }>
+    school: Array<{
+      id: string
+      name: Text
+      description: Text
+      grades: Text
+      active: boolean
+    }>
+  }
+  staff: Array<{
+    id: string
+    role: Text
+    name: Text
+    bio: Text
+    active: boolean
+  }>
+  gallery: Array<{
+    id: string
+    src: string
+    caption: Text
+    order: number
+  }>
+  news: Array<{
+    id: string
+    date: string
+    title: Text
+    body: Text
+  }>
+  menu: Array<{
+    id: string
+    day: Text
+    dish: Text
+  }>
+  contact: {
+    hours: Text
+    address: Text
+    phone: Text
+    email: Text
+  }
+  about: {
+    mission: Text
+    history: Text
+    values: Text
+  }
+}
+
+export const defaultSiteContent: SiteContent = {
+  homepage: {
+    hero: {
+      kicker: {
+        he: 'בית חב״ד לחינוך',
+        en: 'Chabad House for Education',
+        ru: 'Дом Хабад для образования',
+      },
+      title: {
+        he: 'בית שקט לילדים. בהירות להורים.',
+        en: 'A quiet home for children. Clarity for parents.',
+        ru: 'Тихий дом для детей. Ясность для родителей.',
+      },
+      lead: {
+        he: 'גן קינדר ובית הספר חולקים חצר אחת, ערכים אחדים, ויום שמכבד את הילד — בלי רעש מיותר ובלי מערכת קרה.',
+        en: 'Kindergarten and school share one courtyard, shared values, and a day that respects the child — without unnecessary noise or a cold system.',
+        ru: 'Детский сад и школа делят один двор, общие ценности и день, который уважает ребенка — без лишнего шума и холодной системы.',
+      },
+    },
+    stats: [
+      {
+        id: 'stat1',
+        number: { he: 'שלוש שפות', en: 'Three languages', ru: 'Три языка' },
+        description: { he: 'עברית בגן, ליווי להורים באנגלית וברוסית.', en: 'Hebrew in gan, parent support in English and Russian.', ru: 'Иврит в саду, поддержка родителей на английском и русском.' },
+      },
+      {
+        id: 'stat2',
+        number: { he: 'גן + בית ספר', en: 'Gan + School', ru: 'Сад + школа' },
+        description: { he: 'קמפוס אחד, מגיל שנה עד כיתה ו׳.', en: 'One campus, from age one to grade 6.', ru: 'Один кампус, от года до 6 класса.' },
+      },
+      {
+        id: 'stat3',
+        number: { he: 'מטבח כשר', en: 'Kosher kitchen', ru: 'Кошерная кухня' },
+        description: { he: 'מהדרין, תפריט שבועי שקוף בפורטל.', en: 'Mehadrin, weekly menu transparent in portal.', ru: 'Мегадрин, недельное меню прозрачно в кабинете.' },
+      },
+    ],
+    values: [
+      {
+        id: 'val1',
+        title: { he: 'כבוד לילד', en: 'Respect for the child', ru: 'Уважение к ребенку' },
+        description: { he: 'לא ממהרים. לא צועקים. מסבירים.', en: 'No rushing. No yelling. We explain.', ru: 'Не спешим. Не кричим. Объясняем.' },
+      },
+      {
+        id: 'val2',
+        title: { he: 'שבת וחגים', en: 'Shabbat and holidays', ru: 'Шаббат и праздники' },
+        description: { he: 'לוח השנה היהודי הוא קצב החיים, לא קישוט.', en: 'The Jewish calendar is the rhythm of life, not decoration.', ru: 'Еврейский календарь — ритм жизни, а не украшение.' },
+      },
+      {
+        id: 'val3',
+        title: { he: 'שותפות עם הבית', en: 'Partnership with home', ru: 'Партнерство с домом' },
+        description: { he: 'ההורה יודע מה היה היום — בלי לרדוף אחרי הודעות.', en: 'Parents know what happened today — without chasing messages.', ru: 'Родители знают, что было сегодня — без погони за сообщениями.' },
+      },
+    ],
+    quotes: [
+      {
+        id: 'quote1',
+        text: {
+          he: 'הילדה חוזרת הביתה רגועה. זה כל מה שביקשתי, בלי מילים גדולות.',
+          en: 'Our daughter comes home calm. That is all we asked for — without big words.',
+          ru: 'Дочь возвращается домой спокойной. Это всё, что мы просили — без громких слов.',
+        },
+        by: {
+          he: 'אם בגן, משפחה דוברת רוסית',
+          en: 'A gan mother, Russian-speaking family',
+          ru: 'Мама из сада, русскоязычная семья',
+        },
+      },
+    ],
+  },
+  programs: {
+    gan: [
+      {
+        id: 'full',
+        name: { he: 'יום מלא', en: 'Full day', ru: 'Полный день' },
+        description: { he: '7:30–16:30. משחק, ארוחות, מנוחה וחצר.', en: '7:30–16:30. Play, meals, rest and yard.', ru: '7:30–16:30. Игра, еда, отдых и двор.' },
+        amount: 2800,
+        unit: 'month',
+        active: true,
+      },
+      {
+        id: 'half',
+        name: { he: 'חצי יום', en: 'Half day', ru: 'Неполный день' },
+        description: { he: '7:30–12:30. בוקר מלא, בלי מנוחת צהריים.', en: '7:30–12:30. Full morning, no afternoon rest.', ru: '7:30–12:30. Полное утро, без дневного отдыха.' },
+        amount: 1900,
+        unit: 'month',
+        active: true,
+      },
+      {
+        id: 'hourly',
+        name: { he: 'חוגים לפי שעה', en: 'Hourly clubs', ru: 'Почасовые кружки' },
+        description: { he: 'מפגשים קצרים באמנות, תנועה ותורה.', en: 'Short sessions in art, movement and Torah.', ru: 'Короткие занятия искусством, движением и Торой.' },
+        amount: 80,
+        unit: 'hour',
+        active: true,
+      },
+      {
+        id: 'emergency',
+        name: { he: 'שהייה דחופה', en: 'Emergency stay', ru: 'Экстренное пребывание' },
+        description: { he: 'יום בודד כשצריך עזרה פתאום — במקום פנוי.', en: 'Single day when help is needed suddenly — if space available.', ru: 'Один день, когда внезапно нужна помощь — при наличии места.' },
+        amount: 150,
+        unit: 'day',
+        active: true,
+      },
+    ],
+    school: [
+      {
+        id: 'grades12',
+        name: { he: 'כיתות א׳–ב׳', en: 'Grades 1-2', ru: 'Классы 1-2' },
+        description: { he: 'קריאה, חשבון ראשון, ופרשה שמרגישה קרובה.', en: 'Reading, basic math, and parsha that feels close.', ru: 'Чтение, начальная математика и глава, которая кажется близкой.' },
+        grades: { he: 'א׳–ב׳', en: '1-2', ru: '1-2' },
+        active: true,
+      },
+      {
+        id: 'grades34',
+        name: { he: 'כיתות ג׳–ד׳', en: 'Grades 3-4', ru: 'Классы 3-4' },
+        description: { he: 'מיומנויות, אחריות אישית, ועזרה לצעירים.', en: 'Skills, personal responsibility, helping younger students.', ru: 'Навыки, личная ответственность, помощь младшим.' },
+        grades: { he: 'ג׳–ד׳', en: '3-4', ru: '3-4' },
+        active: true,
+      },
+      {
+        id: 'grades56',
+        name: { he: 'כיתות ה׳–ו׳', en: 'Grades 5-6', ru: 'Классы 5-6' },
+        description: { he: 'עומק בלימוד, טיולים וקהילה.', en: 'Depth in study, trips and community.', ru: 'Глубина в учебе, поездки и сообщество.' },
+        grades: { he: 'ה׳–ו׳', en: '5-6', ru: '5-6' },
+        active: true,
+      },
+    ],
+  },
+  staff: [
+    {
+      id: 's1',
+      role: { he: 'מנהלת', en: 'Director', ru: 'Директор' },
+      name: { he: 'רבקה לוי', en: 'Rivka Levi', ru: 'Рівка Леви' },
+      bio: {
+        he: 'עשר שנים בחינוך חב״ד. מדברת עברית, אנגלית ורוסית עם ההורים.',
+        en: 'Ten years in Chabad education. Speaks Hebrew, English and Russian with parents.',
+        ru: 'Десять лет в образовании Хабад. С родителями говорит на иврите, английском и русском.',
+      },
+      active: true,
+    },
+    {
+      id: 's2',
+      role: { he: 'גננת ראשית', en: 'Lead teacher', ru: 'Старший воспитатель' },
+      name: { he: 'חיה גולד', en: 'Chaya Gold', ru: 'Хая Гольд' },
+      bio: {
+        he: 'אחראית על הגיל הרך. שמה לב לפרידה בבוקר ולשינה בצהריים.',
+        en: 'Leads early years. Pays attention to morning goodbye and afternoon rest.',
+        ru: 'Отвечает за малышей. Следит за утренним прощанием и дневным сном.',
+      },
+      active: true,
+    },
+    {
+      id: 's3',
+      role: { he: 'מחנך כיתה ב׳', en: 'Grade 2 teacher', ru: 'Учитель 2 класса' },
+      name: { he: 'יוסף מזרחי', en: 'Yosef Mizrahi', ru: 'Йосеф Мизрахи' },
+      bio: {
+        he: 'מלמד קודש וחול באותו קול. בחצר הוא הראשון עם הכדור.',
+        en: 'Teaches Torah and general studies in the same voice. First with the ball in the yard.',
+        ru: 'Преподаёт Тору и светские предметы одним голосом. Во дворе первым берёт мяч.',
+      },
+      active: true,
+    },
+  ],
+  gallery: [
+    {
+      id: 'g1',
+      src: 'images/gan-classroom.png',
+      caption: { he: 'הגן בבוקר', en: 'The gan in the morning', ru: 'Сад утром' },
+      order: 1,
+    },
+    {
+      id: 'g2',
+      src: 'images/school-classroom.png',
+      caption: { he: 'כיתה בבית הספר', en: 'A school classroom', ru: 'Класс в школе' },
+      order: 2,
+    },
+    {
+      id: 'g3',
+      src: 'images/garden-activity.png',
+      caption: { he: 'גינת התבלינים', en: 'The herb garden', ru: 'Огород пряностей' },
+      order: 3,
+    },
+    {
+      id: 'g4',
+      src: 'images/shabbat-table.png',
+      caption: { he: 'קבלת שבת', en: 'Kabbalat Shabbat', ru: 'Встреча шаббата' },
+      order: 4,
+    },
+  ],
+  news: [
+    {
+      id: 'n1',
+      date: '2026-08-18',
+      title: {
+        he: 'קבלת שבת בגן ביום שישי',
+        en: 'Kabbalat Shabbat in the gan on Friday',
+        ru: 'Каббалат шаббат в саду в пятницу',
+      },
+      body: {
+        he: 'הילדים יכינו חלות קטנות. איסוף עד 12:00.',
+        en: 'The children will bake small challot. Pickup by 12:00.',
+        ru: 'Дети испекут маленькие халы. Сбор до 12:00.',
+      },
+    },
+    {
+      id: 'n2',
+      date: '2026-08-16',
+      title: {
+        he: 'תמונות מטיול החצר עלו לפורטל',
+        en: 'Yard-trip photographs are in the portal',
+        ru: 'Фото прогулки по двору уже в кабинете',
+      },
+      body: {
+        he: 'אלבום קצר בכניסת ההורים.',
+        en: 'A short album in the parent portal.',
+        ru: 'Короткий альбом во входе для родителей.',
+      },
+    },
+    {
+      id: 'n3',
+      date: '2026-08-12',
+      title: {
+        he: 'שינוי בתפריט יום רביעי',
+        en: 'Wednesday menu change',
+        ru: 'Изменение меню в среду',
+      },
+      body: {
+        he: 'מרק דלעת במקום אורז, אחרי הודעת ספק על אלרגן.',
+        en: 'Pumpkin soup instead of rice, after a supplier allergen notice.',
+        ru: 'Тыквенный суп вместо риса — уведомление поставщика об аллергене.',
+      },
+    },
+  ],
+  menu: [
+    { id: 'm1', day: { he: 'ראשון', en: 'Sunday', ru: 'Воскресенье' }, dish: { he: 'פתיתים וירקות', en: 'Pasta and vegetables', ru: 'Паста с овощами' } },
+    { id: 'm2', day: { he: 'שני', en: 'Monday', ru: 'Понедельник' }, dish: { he: 'אורז עם גזר', en: 'Rice with carrots', ru: 'Рис с морковью' } },
+    { id: 'm3', day: { he: 'שלישי', en: 'Tuesday', ru: 'Вторник' }, dish: { he: 'שקשוקה רכה', en: 'Gentle shakshuka', ru: 'Мягкая шакшука' } },
+    { id: 'm4', day: { he: 'רביעי', en: 'Wednesday', ru: 'Среда' }, dish: { he: 'מרק דלעת', en: 'Pumpkin soup', ru: 'Тыквенный суп' } },
+    { id: 'm5', day: { he: 'חמישי', en: 'Thursday', ru: 'Четверг' }, dish: { he: 'קוסקוס וקטניות', en: 'Couscous and legumes', ru: 'Кус-кус с бобовыми' } },
+    { id: 'm6', day: { he: 'שישי', en: 'Friday', ru: 'Пятница' }, dish: { he: 'חלה ומרק עוף', en: 'Challah and chicken soup', ru: 'Хала и куриный суп' } },
+  ],
+  contact: {
+    hours: { he: 'א׳–ה׳ 7:30–16:30 · ו׳ 7:30–12:30', en: 'Sun–Thu 7:30–16:30 · Fri 7:30–12:30', ru: 'Вс–Чт 7:30–16:30 · Пт 7:30–12:30' },
+    address: { he: 'רחוב הנחלה 12, ירושלים', en: '12 HaNachala St, Jerusalem', ru: 'ул. ХаНахала 12, Иерусалим' },
+    phone: { he: '02-555-0100', en: '02-555-0100', ru: '02-555-0100' },
+    email: { he: 'office@chabad-kinder.org.il', en: 'office@chabad-kinder.org.il', ru: 'office@chabad-kinder.org.il' },
+  },
+  about: {
+    mission: {
+      he: 'אנחנו כאן בשביל לתת לילד בית שקט ומכבד, ולהורים שקט נפשי — לדעת שהילד במקום טוב.',
+      en: 'We are here to give children a quiet and respectful home, and parents peace of mind — knowing their child is in a good place.',
+      ru: 'Мы здесь, чтобы дать детям тихий и уважительный дом, а родителям душевный покой — зная, что их ребенок в хорошем месте.',
+    },
+    history: {
+      he: 'המוסד נוסד בשנת 2010 על ידי משפחת לוי, שראו צורך בחינוך חב״די איכותי בירושלים.',
+      en: 'The institution was founded in 2010 by the Levi family, who saw a need for quality Chabad education in Jerusalem.',
+      ru: 'Учреждение было основано в 2010 году семьей Леви, которая видела потребность в качественном образовании Хабад в Иерусалиме.',
+    },
+    values: {
+      he: 'כל ילד הוא עולם שלם. אנחנו לא ממהרים, לא צועקים, ולא משווים.',
+      en: 'Every child is a complete world. We do not rush, do not yell, and do not compare.',
+      ru: 'Каждый ребенок — целый мир. Мы не спешим, не кричим и не сравниваем.',
+    },
+  },
+}

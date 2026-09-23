@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Navigate, Outlet, Route, Routes, useParams } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
+import { ContentProvider } from './context/ContentContext'
 import { PortalLayout } from './components/PortalLayout'
 import { PublicLayout } from './components/PublicLayout'
 import { dirOf, isLang } from './lib/locale'
@@ -19,6 +20,7 @@ import { AdminAttendance } from './pages/admin/AdminAttendance'
 import { AdminCampus } from './pages/admin/AdminCampus'
 import { AdminChildren } from './pages/admin/AdminChildren'
 import { AdminClubs } from './pages/admin/AdminClubs'
+import { AdminContent } from './pages/admin/AdminContent'
 import { AdminDashboard } from './pages/admin/AdminDashboard'
 import { AdminFinance } from './pages/admin/AdminFinance'
 import { AdminMessages } from './pages/admin/AdminMessages'
@@ -53,10 +55,11 @@ function LocaleLayout() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter basename={basename}>
-        <Routes>
-          <Route path="/" element={<Navigate to="/he" replace />} />
+    <ContentProvider>
+      <AuthProvider>
+        <BrowserRouter basename={basename}>
+          <Routes>
+            <Route path="/" element={<Navigate to="/he" replace />} />
           <Route path="/:lang" element={<LocaleLayout />}>
             <Route element={<PublicLayout />}>
               <Route index element={<HomePage />} />
@@ -80,6 +83,7 @@ export default function App() {
             </Route>
             <Route path="admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
+              <Route path="content" element={<AdminContent />} />
               <Route path="children" element={<AdminChildren />} />
               <Route path="applications" element={<AdminApplications />} />
               <Route path="staff" element={<AdminStaff />} />
@@ -95,5 +99,6 @@ export default function App() {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+    </ContentProvider>
   )
 }
