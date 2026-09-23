@@ -1,0 +1,21 @@
+{
+  "homepage": {
+    "hero": {
+      "kicker": {
+        "he": "בית חב״ד לחינוך",
+        "en": "Chabad House for Education",
+        "ru": "Дом Хабад для образования"
+      },
+      "title": {
+        "he": "בית שקט לילדים. בהירות להורים.",
+        "en": "A quiet home for children. Clarity for parents.",
+        "ru": "Тихий дом для детей. Ясность для родителей."
+      },
+      "lead": {
+        "he": "גן קינדר ובית הספר חולקים חצר אחת, ערכים אחדים, ויום שמכבד את הילד — בלי רעש מיותר ובלי מערכת קרה.",
+        "en": "Kindergarten and school share one courtyard, shared values, and a day that respects the child — without unnecessary noise or a cold system.",
+        "ru": "Детский сад и школа делят один двор, общие ценности и день, который уважает ребенка — без лишнего шума и холодной системы."
+      }
+    }
+  }
+}

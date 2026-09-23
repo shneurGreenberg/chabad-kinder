@@ -23,6 +23,7 @@ import { AdminClubs } from './pages/admin/AdminClubs'
 import { AdminContent } from './pages/admin/AdminContent'
 import { AdminDashboard } from './pages/admin/AdminDashboard'
 import { AdminFinance } from './pages/admin/AdminFinance'
+import { AdminGitHub } from './pages/admin/AdminGitHub'
 import { AdminMessages } from './pages/admin/AdminMessages'
 import { AdminStaff } from './pages/admin/AdminStaff'
 import { AdminTariffs } from './pages/admin/AdminTariffs'
@@ -84,6 +85,7 @@ export default function App() {
             <Route path="admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="content" element={<AdminContent />} />
+              <Route path="github" element={<AdminGitHub />} />
               <Route path="children" element={<AdminChildren />} />
               <Route path="applications" element={<AdminApplications />} />
               <Route path="staff" element={<AdminStaff />} />

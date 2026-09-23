@@ -299,6 +299,7 @@
     "nav": {
       "home": "Сводка",
       "content": "Контент сайта",
+      "github": "GitHub",
       "children": "Дети",
       "applications": "Заявки",
       "staff": "Сотрудники",

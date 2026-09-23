@@ -37,6 +37,7 @@ export function Button({
   type = 'button',
   variant = 'gold',
   className = '',
+  disabled = false,
 }: {
   children: ReactNode
   to?: string
@@ -45,6 +46,7 @@ export function Button({
   type?: 'button' | 'submit'
   variant?: 'gold' | 'navy' | 'ghost' | 'cream'
   className?: string
+  disabled?: boolean
 }) {
   const styles = {
     gold: 'bg-gold text-navy-deep hover:bg-gold-soft',
@@ -52,7 +54,8 @@ export function Button({
     ghost: 'bg-transparent text-current border border-current/25 hover:border-current/60',
     cream: 'bg-cream text-navy hover:bg-white',
   }[variant]
-  const cls = `inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition ${styles} ${className}`
+  const disabledClass = disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
+  const cls = `inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold transition ${styles} ${disabledClass} ${className}`
   if (to) return <Link className={cls} to={to}>{children}</Link>
   if (href) {
     return (
@@ -62,7 +65,7 @@ export function Button({
     )
   }
   return (
-    <button className={cls} type={type} onClick={onClick}>
+    <button className={cls} type={type} onClick={onClick} disabled={disabled}>
       {children}
     </button>
   )

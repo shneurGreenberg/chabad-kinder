@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { defaultSiteContent, type SiteContent } from '../data/content'
 import { loadJson, saveJson } from '../lib/storage'
 import type { Text } from '../data/mock'
@@ -40,10 +40,36 @@ type ContentContextValue = {
 
 const ContentContext = createContext<ContentContextValue | null>(null)
 
+async function loadPublicContent(): Promise<SiteContent | null> {
+  try {
+    const response = await fetch('/chabad-kinder/site-content.json')
+    if (response.ok) {
+      return await response.json()
+    }
+  } catch {
+    // Ignore fetch errors
+  }
+  return null
+}
+
 export function ContentProvider({ children }: { children: ReactNode }) {
   const [content, setContent] = useState<SiteContent>(() => 
     loadJson('site-content', defaultSiteContent)
   )
+
+  // Try to load content from public JSON on mount
+  useEffect(() => {
+    loadPublicContent().then((publicContent) => {
+      if (publicContent) {
+        // Check if localStorage has content, if not, use public content
+        const localContent = loadJson<SiteContent | null>('site-content', null)
+        if (!localContent) {
+          setContent(publicContent)
+          saveJson('site-content', publicContent)
+        }
+      }
+    })
+  }, [])
 
   function persist(next: SiteContent) {
     saveJson('site-content', next)
