@@ -40,11 +40,67 @@ type ContentContextValue = {
 
 const ContentContext = createContext<ContentContextValue | null>(null)
 
+function isPartialContent(content: unknown): boolean {
+  if (!content || typeof content !== 'object') return true
+  const obj = content as Record<string, unknown>
+  
+  // Check for required top-level keys
+  const hasRequiredKeys = ['homepage', 'programs', 'staff', 'gallery', 'news', 'menu', 'contact', 'about']
+    .every(key => key in obj)
+  
+  if (!hasRequiredKeys) return true
+  
+  // Check homepage has all required sections
+  const homepage = obj.homepage as Record<string, unknown>
+  if (!homepage || typeof homepage !== 'object') return true
+  
+  const hasHomepageSections = ['hero', 'stats', 'values', 'quotes'].every(key => key in homepage)
+  return !hasHomepageSections
+}
+
+function deepMerge<T>(target: T, source: Partial<T>): T {
+  const result = { ...target }
+  
+  for (const key in source) {
+    const sourceValue = source[key]
+    const targetValue = result[key]
+    
+    if (sourceValue === undefined) continue
+    
+    if (Array.isArray(sourceValue) && Array.isArray(targetValue)) {
+      // For arrays, use source if it has items, otherwise keep target
+      result[key] = (sourceValue.length > 0 ? sourceValue : targetValue) as T[Extract<keyof T, string>]
+    } else if (
+      sourceValue &&
+      typeof sourceValue === 'object' &&
+      !Array.isArray(sourceValue) &&
+      targetValue &&
+      typeof targetValue === 'object' &&
+      !Array.isArray(targetValue)
+    ) {
+      // Recursively merge objects
+      result[key] = deepMerge(targetValue, sourceValue as Partial<T[Extract<keyof T, string>]>)
+    } else {
+      // Use source value
+      result[key] = sourceValue as T[Extract<keyof T, string>]
+    }
+  }
+  
+  return result
+}
+
 async function loadPublicContent(): Promise<SiteContent | null> {
   try {
     const response = await fetch('/chabad-kinder/site-content.json')
     if (response.ok) {
-      return await response.json()
+      const data = await response.json()
+      
+      // If content is partial or invalid, merge with defaults
+      if (isPartialContent(data)) {
+        return deepMerge(defaultSiteContent, data)
+      }
+      
+      return data
     }
   } catch {
     // Ignore fetch errors
@@ -53,17 +109,25 @@ async function loadPublicContent(): Promise<SiteContent | null> {
 }
 
 export function ContentProvider({ children }: { children: ReactNode }) {
-  const [content, setContent] = useState<SiteContent>(() => 
-    loadJson('site-content', defaultSiteContent)
-  )
+  const [content, setContent] = useState<SiteContent>(() => {
+    const localContent = loadJson<SiteContent | null>('site-content', null)
+    
+    // If localStorage has partial/corrupted content, use defaults
+    if (localContent && isPartialContent(localContent)) {
+      return defaultSiteContent
+    }
+    
+    return localContent || defaultSiteContent
+  })
 
   // Try to load content from public JSON on mount
   useEffect(() => {
     loadPublicContent().then((publicContent) => {
       if (publicContent) {
-        // Check if localStorage has content, if not, use public content
         const localContent = loadJson<SiteContent | null>('site-content', null)
-        if (!localContent) {
+        
+        // If localStorage is empty OR has partial content, use merged public content
+        if (!localContent || isPartialContent(localContent)) {
           setContent(publicContent)
           saveJson('site-content', publicContent)
         }
