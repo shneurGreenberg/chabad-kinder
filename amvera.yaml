@@ -1,0 +1,15 @@
+meta:
+  _schema: v1
+  environment: nodejs
+  toolchain: npm
+
+build:
+  command: npm ci && npm run build
+
+run:
+  command: npm start
+  containerPort: 3000
+
+persistence:
+  - path: /data
+    size: 1Gi
