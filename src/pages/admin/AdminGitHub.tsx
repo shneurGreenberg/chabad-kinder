@@ -70,7 +70,22 @@ export function AdminGitHub() {
 
   return (
     <div className="grid gap-6">
-      <h1 className="font-display text-3xl text-navy">הגדרות GitHub</h1>
+      <div className="rounded-lg bg-amber-50 p-4 border border-amber-200">
+        <h2 className="font-display text-xl text-amber-900">⚠️ הערת שינוי ארכיטקטורה</h2>
+        <p className="mt-2 text-sm text-amber-800">
+          החל מגרסה 2.0, תוכן האתר מנוהל במסד נתונים MongoDB ולא ב-GitHub.
+          העמוד הזה נשאר לצרכי תאימות לאחור בלבד.
+        </p>
+        <p className="mt-2 text-sm text-amber-800">
+          <strong>מומלץ:</strong> ערוך תוכן דרך פאנל הניהול הרגיל. השינויים נשמרים אוטומטית למסד הנתונים.
+        </p>
+        <p className="mt-2 text-sm text-amber-700">
+          Starting with v2.0, site content is managed in MongoDB, not GitHub.
+          This page remains for backwards compatibility only.
+        </p>
+      </div>
+      
+      <h1 className="font-display text-3xl text-navy">הגדרות GitHub (מיושן)</h1>
 
       <Card>
         <h2 className="font-display text-xl text-navy">חיבור ל-GitHub</h2>

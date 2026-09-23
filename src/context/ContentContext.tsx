@@ -1,10 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { defaultSiteContent, type SiteContent } from '../data/content'
 import { loadJson, saveJson } from '../lib/storage'
+import { api } from '../lib/api'
 import type { Text } from '../data/mock'
 
 type ContentContextValue = {
   content: SiteContent
+  loading: boolean
+  citySlug: string
+  setCitySlug: (slug: string) => void
   updateHomepageHero: (hero: Partial<SiteContent['homepage']['hero']>) => void
   updateStat: (id: string, data: Partial<SiteContent['homepage']['stats'][0]>) => void
   addStat: (data: Omit<SiteContent['homepage']['stats'][0], 'id'>) => void
@@ -36,6 +40,7 @@ type ContentContextValue = {
   exportContent: () => string
   importContent: (json: string) => boolean
   resetToDefaults: () => void
+  refreshContent: () => Promise<void>
 }
 
 const ContentContext = createContext<ContentContextValue | null>(null)
@@ -44,13 +49,11 @@ function isPartialContent(content: unknown): boolean {
   if (!content || typeof content !== 'object') return true
   const obj = content as Record<string, unknown>
   
-  // Check for required top-level keys
   const hasRequiredKeys = ['homepage', 'programs', 'staff', 'gallery', 'news', 'menu', 'contact', 'about']
     .every(key => key in obj)
   
   if (!hasRequiredKeys) return true
   
-  // Check homepage has all required sections
   const homepage = obj.homepage as Record<string, unknown>
   if (!homepage || typeof homepage !== 'object') return true
   
@@ -68,7 +71,6 @@ function deepMerge<T>(target: T, source: Partial<T>): T {
     if (sourceValue === undefined) continue
     
     if (Array.isArray(sourceValue) && Array.isArray(targetValue)) {
-      // For arrays, use source if it has items, otherwise keep target
       result[key] = (sourceValue.length > 0 ? sourceValue : targetValue) as T[Extract<keyof T, string>]
     } else if (
       sourceValue &&
@@ -78,10 +80,8 @@ function deepMerge<T>(target: T, source: Partial<T>): T {
       typeof targetValue === 'object' &&
       !Array.isArray(targetValue)
     ) {
-      // Recursively merge objects
       result[key] = deepMerge(targetValue, sourceValue as Partial<T[Extract<keyof T, string>]>)
     } else {
-      // Use source value
       result[key] = sourceValue as T[Extract<keyof T, string>]
     }
   }
@@ -89,60 +89,78 @@ function deepMerge<T>(target: T, source: Partial<T>): T {
   return result
 }
 
-async function loadPublicContent(): Promise<SiteContent | null> {
-  try {
-    const response = await fetch('/chabad-kinder/site-content.json')
-    if (response.ok) {
-      const data = await response.json()
-      
-      // If content is partial or invalid, merge with defaults
-      if (isPartialContent(data)) {
-        return deepMerge(defaultSiteContent, data)
-      }
-      
-      return data
-    }
-  } catch {
-    // Ignore fetch errors
-  }
-  return null
-}
+const DEFAULT_CITY_SLUG = 'novosibirsk'
 
 export function ContentProvider({ children }: { children: ReactNode }) {
-  const [content, setContent] = useState<SiteContent>(() => {
-    const localContent = loadJson<SiteContent | null>('site-content', null)
-    
-    // If localStorage has partial/corrupted content, use defaults
-    if (localContent && isPartialContent(localContent)) {
-      return defaultSiteContent
-    }
-    
-    return localContent || defaultSiteContent
+  const [citySlug, setCitySlug] = useState<string>(() => {
+    return loadJson<string>('city-slug', DEFAULT_CITY_SLUG)
   })
+  
+  const [content, setContent] = useState<SiteContent>(defaultSiteContent)
+  const [loading, setLoading] = useState(true)
 
-  // Try to load content from public JSON on mount
-  useEffect(() => {
-    loadPublicContent().then((publicContent) => {
-      if (publicContent) {
-        const localContent = loadJson<SiteContent | null>('site-content', null)
-        
-        // If localStorage is empty OR has partial content, use merged public content
-        if (!localContent || isPartialContent(localContent)) {
-          setContent(publicContent)
-          saveJson('site-content', publicContent)
+  async function loadContent() {
+    setLoading(true)
+    try {
+      const session = await api.getSession().catch(() => ({ authenticated: false }))
+      
+      if (session.authenticated) {
+        const data = await api.getAdminContent()
+        if (data.content && !isPartialContent(data.content)) {
+          setContent(data.content)
+        } else {
+          setContent(deepMerge(defaultSiteContent, data.content || {}))
+        }
+      } else {
+        const data = await api.getPublicContent(citySlug)
+        if (data.content && !isPartialContent(data.content)) {
+          setContent(data.content)
+        } else {
+          setContent(deepMerge(defaultSiteContent, data.content || {}))
         }
       }
-    })
-  }, [])
+    } catch (error) {
+      console.error('Failed to load content from API, using defaults:', error)
+      const localContent = loadJson<SiteContent | null>('site-content', null)
+      if (localContent && !isPartialContent(localContent)) {
+        setContent(localContent)
+      } else {
+        setContent(defaultSiteContent)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  function persist(next: SiteContent) {
-    saveJson('site-content', next)
+  useEffect(() => {
+    loadContent()
+  }, [citySlug])
+
+  useEffect(() => {
+    saveJson('city-slug', citySlug)
+  }, [citySlug])
+
+  async function persist(next: SiteContent) {
     setContent(next)
+    saveJson('site-content', next)
+    
+    try {
+      const session = await api.getSession().catch(() => ({ authenticated: false }))
+      if (session.authenticated) {
+        await api.updateAdminContent(next)
+      }
+    } catch (error) {
+      console.error('Failed to save content to API:', error)
+    }
   }
 
   const value = useMemo<ContentContextValue>(
     () => ({
       content,
+      loading,
+      citySlug,
+      setCitySlug,
+      refreshContent: loadContent,
       updateHomepageHero: (hero) => {
         persist({
           ...content,
@@ -375,7 +393,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
         persist(defaultSiteContent)
       },
     }),
-    [content],
+    [content, loading, citySlug],
   )
 
   return <ContentContext.Provider value={value}>{children}</ContentContext.Provider>
