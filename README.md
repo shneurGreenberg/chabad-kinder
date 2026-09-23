@@ -235,7 +235,10 @@ Admin routes מזהים את ה-tenant מה-session
 ## 📖 להוראות מפורטות יותר / For More Details
 
 - ראה `ADMIN_GUIDE.md` למדריך ניהול מלא בעברית
-- ראה `IMPLEMENTATION.md` לפרטים טכניים
+- ראה `
+- IMPLEMENTATION.md`
+-
+- <!-- Amvera deployment trigger -->לפרטים טכניים
 
 ---
 
